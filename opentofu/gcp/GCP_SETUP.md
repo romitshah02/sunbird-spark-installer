@@ -202,12 +202,34 @@ grep -rn 'cloud_storage_secret_key\|service_account_private_key\|cloud_storage_p
   /Users/divya/Documents/cossallenv/gcp/sunbird-spark-installer
 ```
 
-Helm chart consumers flagged as separate sweep (follow-up ticket).
+### Helm chart consumers — Step 3 (NEXT)
+
+YAML compat layer in `global-cloud-values.yaml.tfpl`:
+- `cloud_storage_access_key: ${service_account_email}` — kept (non-secret SA email)
+- `cloud_storage_secret_key: ""` — blank (was JSON key)
+
+Helm charts that interpolate these:
+
+| File | Field | Action |
+|---|---|---|
+| `helmcharts/learnbb/charts/cert/configs/env.yaml` | `PRIVATE_CLOUD_STORAGE_SECRET`, `PUBLIC_CLOUD_STORAGE_SECRET` | drop env vars; cert service must use ADC |
+| `helmcharts/knowledgebb/charts/flink/values.yaml:532` | `cloud_storage_secret` | remove; flink jobs use ADC via WI |
+| `helmcharts/knowledgebb/charts/knowlg/configs/application.conf:385,626` | `cloud_storage_secret`, `cloud_storage_private_key_id` | remove; knowlg uses ADC |
+| `helmcharts/learnbb/charts/flink/values.yaml:180` | `cert_cloud_storage_key` | OK (= SA email) |
+| `helmcharts/edbb/charts/secor/values.yaml:2` | `azure_account` (gcp re-uses field) | OK (= SA email) |
+| `helmcharts/edbb/charts/kong/values.yaml:147` | `cloud_storage_access_key` | already empty/unused — leave |
+
+App-side code changes (separate repos, out of scope for this PR):
+- `cert-service` — switch GCS client from key to ADC (`GoogleCredentials.getApplicationDefault()`)
+- `flink-jobs` (knowledgebb + learnbb) — use GCS connector with ADC
+- `knowlg-service` — same
+
+Pods get ADC because workload-identity module annotates K8s SAs (`sunbird-sa`, `velero-sa`) with `iam.gke.io/gcp-service-account`. App SDK auto-resolves.
 
 ---
 
-## Out of scope
-- Helm chart code consuming `cloud_storage_secret_key` — separate sweep.
+## Out of scope (this PR)
+- App code in cert-service, flink-jobs, knowlg-service — needs ADC migration. Separate repos, separate PRs.
 - Public bucket existence — kept.
 - GKE control-plane endpoint — already supports private mode.
 
