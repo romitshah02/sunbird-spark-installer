@@ -14,7 +14,7 @@ data:
 {{- $currentScope := .}}
 {{- $hasFiles := false }}
 {{- range $path, $_ := .Files.Glob "configs/*" }}
-  {{- if and (ne $path "configs/env.yaml") (not (hasSuffix "/" $path)) (not (eq ($currentScope.Files.Get $path) "")) }}
+  {{- if ne $path "configs/env.yaml" }}
     {{- $hasFiles = true }}
     {{ base $path | nindent 2 }}: |-
       {{- with $currentScope }}
