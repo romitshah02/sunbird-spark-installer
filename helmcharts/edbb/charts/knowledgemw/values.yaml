@@ -86,7 +86,7 @@ tolerations: []
 affinity: {}
 
 configmap:
-  enabled: true
+  enabled: false
   mountPath: /config
 
 serviceAccount:
