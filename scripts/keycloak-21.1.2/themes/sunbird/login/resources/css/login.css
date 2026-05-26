@@ -554,8 +554,12 @@ div[class*="kcFormGroupClass"] {
 
 /* Mobile-app client — force narrow single-pane layout regardless of viewport.
    Mirrors the portal's mobile webview rendering when client=mobileApp. */
+html[data-client="mobileApp"] .login-wrapper { background: var(--card-bg); }
 html[data-client="mobileApp"] .login-left-panel { display: none; }
-html[data-client="mobileApp"] .login-right-panel { flex: 1 1 100%; }
+html[data-client="mobileApp"] .login-right-panel {
+    flex: 1 1 100%;
+    align-items: normal;
+}
 html[data-client="mobileApp"] .login-split-container {
     box-shadow: none !important;
     max-width: 100%;
@@ -565,6 +569,8 @@ html[data-client="mobileApp"] .login-card {
     width: 100%;
     height: fit-content !important;
     border-radius: 0;
+    padding: 0;
+    box-shadow: none;
 }
 html[data-client="mobileApp"] .close-button { display: none; }
 
