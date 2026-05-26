@@ -34,8 +34,24 @@
     font-display: swap;
 }
 
+/* Theme seed variables — overridden at runtime by template.ftl from sunbird-theme-seeds cookie.
+   Defaults match portal terracotta preset. */
+:root {
+    --sunbird-spark-theme-primary-h: 12;
+    --sunbird-spark-theme-primary-s: 50%;
+    --sunbird-spark-theme-primary-l: 45%;
+    --sunbird-spark-theme-chip-h: 45;
+    --sunbird-spark-theme-chip-s: 100%;
+    --sunbird-spark-theme-icon-h: 28;
+    --app-font-family: 'Rubik', sans-serif;
+
+    --sunbird-primary: hsl(var(--sunbird-spark-theme-primary-h) var(--sunbird-spark-theme-primary-s) var(--sunbird-spark-theme-primary-l));
+    --sunbird-primary-hover: hsl(var(--sunbird-spark-theme-primary-h) var(--sunbird-spark-theme-primary-s) calc(var(--sunbird-spark-theme-primary-l) - 10%));
+    --sunbird-primary-focus-shadow: hsl(var(--sunbird-spark-theme-primary-h) var(--sunbird-spark-theme-primary-s) var(--sunbird-spark-theme-primary-l) / 0.2);
+}
+
 body {
-    font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: var(--app-font-family), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
@@ -43,7 +59,7 @@ body {
 
 /* Arabic font */
 [dir="rtl"] body {
-    font-family: 'Noto Sans Arabic', 'Rubik', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Noto Sans Arabic', var(--app-font-family), -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Utility: Hide class used by login scripts to toggle visibility */
@@ -350,21 +366,21 @@ body {
     font-style: medium;
     line-height: 100%;
     font-size: 14px;
-    color: #A85236;
+    color: var(--sunbird-primary);
     text-decoration: none;
     height: 16px;
 }
 
 .forgot-password a:hover {
-    color: #A85236;
+    color: var(--sunbird-primary);
     opacity: 0.8;
     cursor: pointer;
 }
 
 /* Login Button */
 .login-button {
-    background-color: #A85236 !important;
-    border-color: #A85236 !important;
+    background-color: var(--sunbird-primary) !important;
+    border-color: var(--sunbird-primary) !important;
     border: none !important;
     box-shadow: none !important;
     color: white !important;
@@ -379,8 +395,8 @@ body {
 
 .login-button:hover {
     opacity: 0.85 !important;
-    background-color: #A85236 !important;
-    border-color: #A85236 !important;
+    background-color: var(--sunbird-primary) !important;
+    border-color: var(--sunbird-primary) !important;
     border: none !important;
     box-shadow: none !important;
     cursor: pointer !important;
@@ -398,7 +414,7 @@ body {
 }
 
 .registration-link a {
-    color: #A85236;
+    color: var(--sunbird-primary);
     text-decoration: none;
     font-weight: 500;
     font-size: 14px;
@@ -450,19 +466,19 @@ input[type="password"]:-ms-input-placeholder,
 
 input[type="text"]:focus,
 input[type="password"]:focus {
-    border-color: #A85236 !important;
+    border-color: var(--sunbird-primary) !important;
     outline: none !important;
     background: white !important;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #A85236 !important;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--sunbird-primary) !important;
     border-radius: 10px !important;
 }
 
 /* Apply the same precise double-border effect on hover for consistency */
 input[type="text"]:hover,
 input[type="password"]:hover {
-    border-color: #A85236 !important;
+    border-color: var(--sunbird-primary) !important;
     background: white !important;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #A85236 !important;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--sunbird-primary) !important;
     border-radius: 10px !important;
 }
 
@@ -539,13 +555,13 @@ div[class*="kcFormGroupClass"] {
 /* Appended Styles from login1.css for Reset Password Page */
 
 :root {
-    --primary-color: #A85236;
-    --primary-hover: #8E311F;
+    --primary-color: var(--sunbird-primary);
+    --primary-hover: var(--sunbird-primary-hover);
     --teal-bg: #4F8A8B;
     --card-bg: #ffffff;
     --text-color: #2D3748;
     --text-secondary: #718096;
-    --font-family: 'Rubik', sans-serif;
+    --font-family: var(--app-font-family);
 }
 
 .sunbird-logo-wrapper {
@@ -556,7 +572,7 @@ div[class*="kcFormGroupClass"] {
 .sunbird-logo-text {
     font-size: 2.2rem;
     font-weight: 700;
-    color: #A85236;
+    color: var(--sunbird-primary);
     letter-spacing: -1.5px;
 }
 
@@ -622,10 +638,10 @@ div[class*="kcFormGroupClass"] {
 .kc-input:hover,
 .kc-input:focus {
     outline: none;
-    border-color: #A85236;
+    border-color: var(--sunbird-primary);
     background: white;
     /* Precise double border: Main Border -> White Gap -> Second Border */
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #A85236;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--sunbird-primary);
     border-radius: 16px;
 }
 
@@ -648,7 +664,7 @@ div[class*="kcFormGroupClass"] {
 .kc-button {
     width: 100%;
     padding: 16px 24px;
-    background: #A85236;
+    background: var(--sunbird-primary);
     color: white;
     border: none;
     border-radius: 16px;
@@ -662,7 +678,7 @@ div[class*="kcFormGroupClass"] {
 
 .kc-button:hover {
     opacity: 0.85;
-    background: #A85236;
+    background: var(--sunbird-primary);
     transform: none;
     box-shadow: none;
     cursor: pointer;
@@ -696,7 +712,7 @@ div[class*="kcFormGroupClass"] {
     opacity: 0.85;
     box-shadow: none;
     transform: none;
-    background: #A85236;
+    background: var(--sunbird-primary);
 }
 
 .kc-form-buttons {
@@ -779,8 +795,8 @@ div[class*="kcFormGroupClass"] {
 }
 
 .otp-input:focus {
-    border-color: #A85236 !important;
-    box-shadow: 0 0 0 2px rgba(167, 58, 36, 0.2) !important;
+    border-color: var(--sunbird-primary) !important;
+    box-shadow: 0 0 0 2px var(--sunbird-primary-focus-shadow) !important;
     outline: none !important;
 }
 
@@ -798,7 +814,7 @@ div[class*="kcFormGroupClass"] {
 }
 
 .resend-otp-container a {
-    color: #A85236;
+    color: var(--sunbird-primary);
     text-decoration: none;
     font-weight: 600;
 }

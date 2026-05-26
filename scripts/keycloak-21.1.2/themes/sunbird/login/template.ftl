@@ -21,6 +21,59 @@
     </#if>
     <title>${msg("loginPageTitle")}</title>
     <script>
+    /*
+     * Theme hand-off — mirrors the language flow. Portal persists three
+     * keys in localStorage (same origin, so shared with Keycloak pages):
+     *   sunbird-theme-seeds   "ph:12,ps:50%,pl:45%,ch:45,cs:100%,ih:28"
+     *   sunbird-font          "rubik" | "poppins" | "inter" | "satisfy"
+     *   sunbird-template      "classic" | "modern"
+     * We read them here on first paint and write the matching CSS vars +
+     * data-template attribute so the login UI matches the portal.
+     */
+    (function() {
+      try {
+        var root = document.documentElement;
+        var read = function(key) {
+          try { return localStorage.getItem(key); } catch(_) { return null; }
+        };
+        var seeds = read('sunbird-theme-seeds');
+        if (seeds) {
+          var parts = {};
+          seeds.split(',').forEach(function(kv) {
+            var idx = kv.indexOf(':');
+            if (idx > -1) parts[kv.slice(0, idx)] = kv.slice(idx + 1);
+          });
+          var hNum = /^\d{1,3}$/;
+          var pct  = /^\d{1,3}%$/;
+          var setVar = function(varName, val, re) {
+            if (val && re.test(val)) root.style.setProperty(varName, val);
+          };
+          setVar('--sunbird-spark-theme-primary-h', parts.ph, hNum);
+          setVar('--sunbird-spark-theme-primary-s', parts.ps, pct);
+          setVar('--sunbird-spark-theme-primary-l', parts.pl, pct);
+          setVar('--sunbird-spark-theme-chip-h',    parts.ch, hNum);
+          setVar('--sunbird-spark-theme-chip-s',    parts.cs, pct);
+          setVar('--sunbird-spark-theme-icon-h',    parts.ih, hNum);
+        }
+        var fontMap = {
+          poppins:  "'Poppins', sans-serif",
+          rubik:    "'Rubik', sans-serif",
+          inter:    "'Inter', sans-serif",
+          satisfy:  "'Satisfy', cursive",
+          lora:     "'Lora', serif"
+        };
+        var fontId = read('sunbird-font');
+        if (fontId && fontMap[fontId]) {
+          root.style.setProperty('--app-font-family', fontMap[fontId]);
+        }
+        var templateId = read('sunbird-template');
+        if (templateId === 'classic' || templateId === 'modern') {
+          root.setAttribute('data-template', templateId);
+        }
+      } catch(e) {}
+    })();
+    </script>
+    <script>
     (function() {
       try {
         var stored = localStorage.getItem('app-language');
