@@ -63,6 +63,23 @@ After implementing, run any available linters or syntax checks.
 
 Report: files changed, lines added/removed, any errors encountered.
 
+Then automatically commit all changed files:
+- Stage only the files modified by this task (not unrelated files)
+- Commit message format: `feat(<scope>): <one-line summary>` — use conventional commits
+- Do NOT add Co-Authored-By lines; git config already has correct author identity
+- Do NOT use `--no-gpg-sign` or any extra flags; commit normally
+
+Then automatically create a PR using `gh pr create`:
+- Title: `feat(<scope>): <one-line summary>` matching the commit
+- Base branch: `main`
+- Body must include:
+  - `## Summary` — bullet list of what changed and why
+  - `## How to enable` — any config/variable changes needed by operators
+  - `## Rollback` — exact steps to revert
+  - `## Test plan` — checklist of items to verify
+  - `Closes <TICKET-ID>` at bottom
+- Return the PR URL to the user
+
 Ask: "Ready to test? (yes / fix something)"
 
 ---
