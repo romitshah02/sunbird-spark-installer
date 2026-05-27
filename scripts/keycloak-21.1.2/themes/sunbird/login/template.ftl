@@ -47,7 +47,7 @@
           terracotta: { ph: 12,  ps: '50%', pl: '45%', ch: 45,  cs: '100%', ih: 28  },
           blue:       { ph: 217, ps: '71%', pl: '46%', ch: 217, cs: '71%',  ih: 200 },
           teal:       { ph: 180, ps: '38%', pl: '38%', ch: 180, cs: '38%',  ih: 170 },
-          purple:     { ph: 265, ps: '50%', pl: '45%', ch: 265, cs: '50%',  ih: 255 },
+          purple:     { ph: 270, ps: '55%', pl: '45%', ch: 270, cs: '55%',  ih: 280 },
           green:      { ph: 145, ps: '45%', pl: '35%', ch: 145, cs: '45%',  ih: 155 },
           indigo:     { ph: 235, ps: '65%', pl: '48%', ch: 235, cs: '65%',  ih: 220 },
           rose:       { ph: 345, ps: '60%', pl: '45%', ch: 345, cs: '60%',  ih: 335 },
@@ -75,7 +75,7 @@
           root.style.setProperty('--app-font-family', FONT_MAP[fontId]);
         }
         var templateId = read('sunbird-template');
-        if (templateId === 'classic' || templateId === 'modern') {
+        if (templateId) {
           root.setAttribute('data-template', templateId);
         }
         try {
