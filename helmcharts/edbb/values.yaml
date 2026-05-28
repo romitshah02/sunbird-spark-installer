@@ -141,7 +141,20 @@ yugabyte: &yugabyte
     master: 3
     tserver: 3
   username: "yugabyte"
-  password: "yugabyte"  
+  password: "yugabyte"
+  tserver:
+    customReadinessProbe:
+      initialDelaySeconds: 15
+      periodSeconds: 10
+      failureThreshold: 6
+      tcpSocket:
+        port: 9042
+    customLivenessProbe:
+      initialDelaySeconds: 30
+      periodSeconds: 20
+      failureThreshold: 3
+      tcpSocket:
+        port: 9042
 
 nginx-public-ingress:
   enabled: true

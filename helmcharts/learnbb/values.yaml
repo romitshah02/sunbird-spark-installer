@@ -123,13 +123,6 @@ yugabyte: &yugabyte
     tserver: 3
   username: yugabyte
   password: yugabyte
-  tserver:
-    customReadinessProbe:
-      initialDelaySeconds: 15
-      periodSeconds: 10
-      failureThreshold: 6
-      tcpSocket:
-        port: 9042
 
 yugabytecql:
   image:
