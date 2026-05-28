@@ -4,9 +4,9 @@ FROM maven:3.9-eclipse-temurin-11 AS builder
 WORKDIR /build
 
 # Clone and build the CDC extension
-RUN git clone https://github.com/Sunbird-Knowlg/knowledge-platform-db-extensions.git && \
+RUN git clone https://github.com/divyagovindaiah/knowledge-platform-db-extensions.git && \
     cd knowledge-platform-db-extensions && \
-    git checkout develop && \
+    git checkout fix/cdc-log-processor-handle && \
     cd janusgraph-cdc-extension && \
     mvn clean package -DskipTests
 
