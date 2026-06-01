@@ -1,4 +1,4 @@
-# Stage 1: Build the JAR (fix: LogProcessorFramework stored to prevent CDC GC)
+# Stage 1: Build the JAR (fix: KafkaSink added for CDC Kafka publishing)
 FROM maven:3.9-eclipse-temurin-11 AS builder
 
 WORKDIR /build

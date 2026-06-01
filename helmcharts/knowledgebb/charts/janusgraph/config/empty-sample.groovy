@@ -46,10 +46,10 @@ try {
     // Configuration Map
     def config = [
         "graph.txn.log_processor.enable": "true",
-        "graph.txn.log_processor.sinks": "LOG", 
-        "graph.txn.log_processor.converter": "SUNBIRD_LEGACY"
-        // "kafka.bootstrap.servers": "kafka:29092",
-        // "kafka.topics.graph.event": "sunbirddev.learning.graph.events"
+        "graph.txn.log_processor.sinks": "KAFKA,LOG",
+        "graph.txn.log_processor.converter": "SUNBIRD_LEGACY",
+        "kafka.bootstrap.servers": "kafka:9092",
+        "kafka.topics.graph.event": "test.knowlg.learning.graph.events"
     ]
 
     GraphLogProcessor.start(graphInstance, config)
