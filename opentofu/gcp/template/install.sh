@@ -169,6 +169,7 @@ function install_service() {
             $set_flags \
             $ed_values_flag \
             $addon_values_flag \
+            -f images.yaml \
             -f "global-resources.yaml" \
             -f "../opentofu/gcp/$environment/global-values.yaml" \
             -f "../opentofu/gcp/$environment/global-cloud-values.yaml" \
@@ -195,6 +196,7 @@ function install_service() {
             --namespace sunbird \
             $ed_values_flag \
             $addon_values_flag \
+            -f images.yaml \
             -f "global-resources.yaml" \
             -f "../opentofu/gcp/$environment/global-values.yaml" \
             -f "../opentofu/gcp/$environment/global-cloud-values.yaml" \
@@ -259,6 +261,7 @@ function generate_postman_env() {
     keycloak_admin=$(kubectl get cm -n sunbird lern-env -ojsonpath='{.data.sunbird_sso_username}')
     keycloak_password=$(kubectl get cm -n sunbird lern-env -ojsonpath='{.data.sunbird_sso_password}')
     google_oauth_client_id=$(kubectl get cm -n sunbird player-env -ojsonpath='{.data.GOOGLE_OAUTH_CLIENT_ID}')
+    google_captcha_site_key=$(yq '.global.sunbird_google_captcha_site_key' global-values.yaml)
     generated_uuid=$(uuidgen)
     temp_file=$(mktemp)
     cp postman.env.json "${temp_file}"
@@ -271,6 +274,7 @@ function generate_postman_env() {
         -e "s|BLOB_STORE_PATH|${blob_store_path}|g" \
         -e "s|PUBLIC_CONTAINER_NAME|${public_container_name}|g" \
         -e "s|REPLACE_WITH_GOOGLE_OAUTH_CLIENT_ID|${google_oauth_client_id}|g" \
+        -e "s|REPLACE_WITH_CAPTCHA_SITE_KEY|${google_captcha_site_key}|g" \
         "${temp_file}" >"env.json"
 
     echo -e "A env.json file is created in this directory: opentofu/gcp/$environment"
