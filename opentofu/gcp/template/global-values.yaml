@@ -15,6 +15,8 @@ keycloak-kids-keys:
   KEYCLOAK_ADMIN_PASSWORD: *keycloak-password
 global:
   skip_storage_module: false  # set to true to reuse buckets from an existing global-cloud-values.yaml; false creates new buckets
+  sunbird_player_editor_ref: "master"  # git branch or tag for sunbird-content-plugins, sunbird-content-editor, sunbird-generic-editor, sunbird-content-player
+  knowledge_platform_ref: "master"  # git branch or tag for knowledge-platform (schemas/local upload)
   building_block: ""
   env: ""
   environment: "" # environment name
@@ -35,6 +37,8 @@ global:
   # Example: sunbird.com
   domain: "REPLACE_ME"
   lets_encrypt_ssl: false #enable this if you are using  let's encrypt ssl certificate
+  cert_notifications:
+    email: "" # provide the email address for certificate renewal notifications/alerts
   play_http:
      secret_key: "a-long-secret-to-calm-the-rage-of-the-entropy-gods-hidden-deep-within-the-silent-ruins-of-forgotten-realms"
   # Provide values for the following variables
