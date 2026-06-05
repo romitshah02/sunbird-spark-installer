@@ -31,7 +31,7 @@ spec:
       labels:
         app: secor
         release: {{ $jobName }}
-        {{- if .Values.global.serviceAccount.name }}
+        {{- if .Values.global.workload_identity_service_account_name }}
         azure.workload.identity/use: "true"
         {{- end }}
     spec:
@@ -39,8 +39,8 @@ spec:
       nodeSelector:
         {{- toYaml .Values.nodeSelector | nindent 8 }}
       {{- end }}
-      {{- if .Values.global.serviceAccount.name }}
-      serviceAccountName: {{ .Values.global.serviceAccount.name }}
+      {{- if .Values.global.workload_identity_service_account_name }}
+      serviceAccountName: {{ .Values.global.workload_identity_service_account_name }}
       {{- else }}
       serviceAccountName: {{ include "base.serviceaccountname" . }}
       {{- end }}

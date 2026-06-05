@@ -33,7 +33,7 @@ spec:
       {{- if .Values.podLabels }}
         {{- toYaml .Values.podLabels | nindent 8 }}
       {{- end }}
-      {{- if .Values.global.serviceAccount.name }}
+      {{- if .Values.global.workload_identity_service_account_name }}
         azure.workload.identity/use: "true"
       {{- end }}
     {{- if or .Values.podAnnotations .Values.metrics.enabled (and .Values.credentials.useSecret (not .Values.credentials.existingSecret)) }}
@@ -57,8 +57,8 @@ spec:
         - name: {{ . }}
       {{- end }}
     {{- end }}
-      {{- if .Values.global.serviceAccount.name }}
-      serviceAccountName: {{ .Values.global.serviceAccount.name }}
+      {{- if .Values.global.workload_identity_service_account_name }}
+      serviceAccountName: {{ .Values.global.workload_identity_service_account_name }}
       {{- else }}
       serviceAccountName: {{ include "velero.serverServiceAccount" . }}
       {{- end }}
