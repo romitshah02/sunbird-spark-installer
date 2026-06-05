@@ -50,7 +50,7 @@ global:
   mail_from_certbot_notifications: ""  #The "from" email address used by the Certbot renewal job for sending SSL renewal status notifications via SendGrid SMTP
   youtube_apikey: ""
   openai_api_key: "REPLACE_WITH_OPENAI_API_KEY"
-  openai_azure_endpoint: ""
+  openai_azure_endpoint: "https://coss-semanticsearch.openai.azure.com/"
   openai_azure_deployment: "text-embedding-3-small"
   superset:
       init:
