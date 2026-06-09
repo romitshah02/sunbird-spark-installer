@@ -26,6 +26,7 @@ dependency "aks" {
 
 dependency "storage" {
     config_path = "../storage"
+    enabled     = !tobool(tostring(local.global_vars.global.skip_storage_module))
     mock_outputs = {
       azurerm_storage_account_name      = "dummy-storage"
       azurerm_storage_container_private = "dummy-private"
