@@ -17,7 +17,7 @@ resource "random_password" "generated_string" {
 
 resource "null_resource" "generate_jwt_keys" {
   triggers = {
-    command = timestamp()
+    script_hash = filemd5(local.jwt_script_location)
   }
   provisioner "local-exec" {
     command = <<EOT
