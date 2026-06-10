@@ -1,0 +1,156 @@
+terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+    null = {
+      source  = "hashicorp/null"
+      version = "~> 3.2"
+    }
+  }
+}
+
+provider "aws" {
+  region = var.region
+}
+
+locals {
+  common_tags = {
+    environment   = var.environment
+    BuildingBlock = var.building_block
+  }
+  environment_name = "${var.building_block}-${var.environment}"
+}
+
+# IAM role for the EKS cluster control plane
+resource "aws_iam_role" "eks_cluster_role" {
+  name = "${local.environment_name}-eks-cluster-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "eks.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = merge(local.common_tags, var.additional_tags)
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
+  role       = aws_iam_role.eks_cluster_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+}
+
+# EKS Cluster
+resource "aws_eks_cluster" "eks" {
+  name     = local.environment_name
+  version  = var.eks_version
+  role_arn = aws_iam_role.eks_cluster_role.arn
+
+  vpc_config {
+    subnet_ids              = var.subnet_ids
+    endpoint_public_access  = true
+    endpoint_private_access = true
+  }
+
+  access_config {
+    authentication_mode                         = "API_AND_CONFIG_MAP"
+    bootstrap_cluster_creator_admin_permissions = true
+  }
+
+  tags = merge(local.common_tags, var.additional_tags)
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_cluster_policy,
+    aws_iam_role_policy_attachment.eks_vpc_resource_controller,
+  ]
+}
+
+# IAM role for EKS node group
+resource "aws_iam_role" "eks_node_role" {
+  name = "${local.environment_name}-eks-node-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+        Action = "sts:AssumeRole"
+      }
+    ]
+  })
+
+  tags = merge(local.common_tags, var.additional_tags)
+}
+
+resource "aws_iam_role_policy_attachment" "eks_worker_node_policy" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_cni_policy" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+resource "aws_iam_role_policy_attachment" "eks_container_registry_read" {
+  role       = aws_iam_role.eks_node_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
+# EKS Node Group (equivalent to AKS default node pool)
+resource "aws_eks_node_group" "big_nodepool" {
+  cluster_name    = aws_eks_cluster.eks.name
+  node_group_name = var.big_nodepool_name
+  node_role_arn   = aws_iam_role.eks_node_role.arn
+  subnet_ids      = var.subnet_ids
+  instance_types  = [var.big_node_size]
+
+  scaling_config {
+    desired_size = var.big_node_count
+    min_size     = 1
+    max_size     = var.big_node_count + 2
+  }
+
+  update_config {
+    max_unavailable = 1
+  }
+
+  tags = merge(local.common_tags, var.additional_tags)
+
+  depends_on = [
+    aws_iam_role_policy_attachment.eks_worker_node_policy,
+    aws_iam_role_policy_attachment.eks_cni_policy,
+    aws_iam_role_policy_attachment.eks_container_registry_read,
+  ]
+}
+
+# Update kubeconfig after cluster creation
+resource "null_resource" "kubeconfig" {
+  triggers = {
+    cluster_id      = aws_eks_cluster.eks.id
+    cluster_version = aws_eks_cluster.eks.version
+    always_run      = timestamp()
+  }
+
+  provisioner "local-exec" {
+    command = "aws eks update-kubeconfig --region ${var.region} --name ${aws_eks_cluster.eks.name} --kubeconfig ~/.kube/config"
+  }
+
+  depends_on = [aws_eks_cluster.eks, aws_eks_node_group.big_nodepool]
+}
