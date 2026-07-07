@@ -1,3 +1,14 @@
+{{- if and .Values.enabled (eq .Values.syncMode "file") }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.identifiersConfigMap | default "sync-tool-identifiers" }}
+  namespace: {{ .Release.Namespace }}
+data:
+  identifiers.csv: |
+{{ .Files.Get "identifiers.csv" | indent 4 }}
+---
+{{- end }}
 {{- if .Values.configmap.enabled }}
 apiVersion: v1
 kind: ConfigMap

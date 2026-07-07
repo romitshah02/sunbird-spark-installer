@@ -130,4 +130,14 @@ global:
     REPLACE_ME
   proxy_certificate: |
     REPLACE_ME
-  # CERTIFICATE-KEYS 
+  # CERTIFICATE-KEYS
+
+# ── Sync Tool (on-demand JanusGraph → OpenSearch sync) ──────────────────────
+# NOT deployed during normal install. Run via: ./install.sh sync <mode>
+# Or trigger via GitHub Actions sync_command input.
+sync-tool:
+  enabled: false     # always false here — sync function flips this at runtime
+  syncMode: full     # full | objectType | identifiers | days | file
+  objectType: ""     # used when syncMode=objectType (e.g. "Content")
+  identifiers: ""    # used when syncMode=identifiers (e.g. "do_123,do_456")
+  days: ""           # used when syncMode=days (e.g. "5") 
