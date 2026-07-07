@@ -37,21 +37,21 @@ spec:
               done
               echo "JanusGraph not ready after 4 minutes"
               exit 1
-        - name: wait-for-elasticsearch
+        - name: wait-for-opensearch
           image: busybox:1.35
           command: ['sh', '-c']
           args:
             - |
-              echo "Waiting for Elasticsearch/OpenSearch..."
+              echo "Waiting for OpenSearch..."
               for i in $(seq 1 60); do
-                if nc -z {{ .Values.global.elasticsearch.host }} {{ .Values.global.elasticsearch.port }}; then
-                  echo "Elasticsearch is ready!"
+                if nc -z {{ .Values.global.opensearch.host }} {{ .Values.global.opensearch.port }}; then
+                  echo "OpenSearch is ready!"
                   exit 0
                 fi
                 echo "Attempt $i: Waiting..."
                 sleep 2
               done
-              echo "Elasticsearch not ready after 2 minutes"
+              echo "OpenSearch not ready after 2 minutes"
               exit 1
       containers:
         - name: sync-tool
