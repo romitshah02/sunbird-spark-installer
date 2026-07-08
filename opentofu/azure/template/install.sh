@@ -395,7 +395,8 @@ if [ $# -eq 0 ]; then
     certificate_config
     dns_mapping
     generate_postman_env
-    run_post_installelse
+    run_post_install
+else
     case "$1" in
     "create_tf_backend")
         create_tf_backend
