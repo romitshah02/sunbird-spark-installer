@@ -445,6 +445,7 @@ flink_jobs:
                                     "application/vnd.android.package-archive",
                                     "application/vnd.ekstep.scorm-archive",
                                     "application/vnd.ekstep.content-archive",
+                                    "application/vnd.ekstep.qti-archive",
                                     "application/epub",
                                     "application/msword",
                                     "application/vnd.ekstep.h5p-archive",
